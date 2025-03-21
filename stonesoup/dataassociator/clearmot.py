@@ -169,11 +169,25 @@ class ClearMotAssociator(TwoTrackToTrackAssociator):
             time_intervals = get_strictly_monotonously_increasing_intervals(
                 timesteps_where_match_exists)
 
+            # for (start_idx, end_idx) in time_intervals:
+            #     associations.add(TimeRangeAssociation(OrderedSet(
+            #         (estim_tracks_by_id[match[0]], truth_tracks_by_id[match[1]])),
+            #         TimeRange(timestamps[timesteps_where_match_exists[start_idx]],
+            #                   timestamps[timesteps_where_match_exists[end_idx-1]])))
+
             for (start_idx, end_idx) in time_intervals:
-                associations.add(TimeRangeAssociation(OrderedSet(
-                    (estim_tracks_by_id[match[0]], truth_tracks_by_id[match[1]])),
-                    TimeRange(timestamps[timesteps_where_match_exists[start_idx]],
-                              timestamps[timesteps_where_match_exists[end_idx-1]])))
+                start_timestamp = timestamps[timesteps_where_match_exists[start_idx]]
+                end_timestamp = timestamps[timesteps_where_match_exists[end_idx - 1]]
+
+                # Check if the start and end timestamps are the same
+                if start_timestamp == end_timestamp:
+                    continue
+
+                # Add the association
+                associations.add(TimeRangeAssociation(
+                    OrderedSet((estim_tracks_by_id[match[0]], truth_tracks_by_id[match[1]])),
+                    TimeRange(start_timestamp, end_timestamp)
+                ))
 
         return associations
 
