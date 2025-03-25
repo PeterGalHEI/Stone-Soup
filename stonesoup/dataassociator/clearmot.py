@@ -181,7 +181,7 @@ class ClearMotAssociator(TwoTrackToTrackAssociator):
 
                 # Check if the start and end timestamps are the same
                 if start_timestamp == end_timestamp:
-                    continue
+                    end_timestamp = end_timestamp + datetime.timedelta(microseconds=1)
 
                 # Add the association
                 associations.add(TimeRangeAssociation(
